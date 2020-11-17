@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo-List</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+        background: url(static/img/bg2.jpg) no-repeat fixed;
+       
+        background-size: cover;
+    }
+
+    form {
+        width: 400px;
+    }
+
+    .header {
+        background-color: white;
+        padding: 2px;
+        opacity: 0.5;
+        margin: 1%;
+
+    }
+
+    h1 {
+       
+        text-align: center;
+        margin-top: .5in;
+        color: rgb(5, 0, 0);
+        font-size: 72px;
+    }
+
+    span {
+        color: red;
+    }
+
+    .todos {
+        border: 2px solid;
+        margin-top: 1in;
+        background-color: white;
+        opacity: 0.5;
+        margin: 1%;
+        padding: 2px;
+    }
+
+    ul li {
+        list-style-type: none;
+    }
+
+    i {
+        color: rgb(8, 8, 252);
+    }
+
+    #list {
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+    }
+
+    input[type=text] {
+        border: 1px solid rgb(253, 3, 3);
+    }
+
+    input[type=text]:focus {
+        border: 2px solid red;
+    }
+
+    table {
+        font-family: arial, sans-serif; 
+    }
+
+    td,
+    th { 
+        padding: 5px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    
+</style>
+
+<body>
+    <div class="header">
+        <h1>𝕸𝖞 <span><u>𝕿𝖔𝖉𝖔</u></span> 𝕷𝖎𝖘𝖙</h1>
+    </div>
+    <div>
+        <center>
+            <form id="form" action="/add" method="POST" autocomplete="off">
+                <div class="form-group">
+                    <label for="todo"></label>
+                    <input type="text" class="form-control" id="todo" name="task" placeholder="Add new task" required>
+                    <label for="date"></label>
+                    <input type="date" class="form-control" id="date" name="date" placeholder="Add date" required>
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" id="addEdit" class="btn btn-success mb-2">ADD</button>
+                </div>
+            </form>
+
+            <div class="todos">
+
+                <li class="list-group mb-2" id="list">
+                    <table>
+
+                        <tr>
+                            <th><b>Date</b></th>
+                            <th><b>Task/s</b></th>
+                            <th><b>Actions</b></th>
+                        </tr>
+                        <% for (i=0; i<data.length; i++){%>
+                        <tr>
+                            <td>
+                                <div class="col-md-10"><b class="<%=data[i]._id%>"><%=data[i].date%></b></div>
+                            </td>
+                            <td>
+                                <div class="col-md-8"><b class="<%=data[i]._id%>"><%=data[i].task%></b></div>
+                            </td>
+                            <td>
+                                <div class="col-md-10 ">
+                                    
+                                    <button id="<%=data[i]._id%>" style="float: left;" class="btn btn-info all_Todos update">Update</button>
+                                    <form method="POST" action="/delete">
+                                        <input type="hidden" name="id" value="<%=data[i]._id%>">
+                                        <button type="submit" class="btn btn-danger all_Todos">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <%}%>
+                    </table>
+                </li> 
+        </center>
+    </div>
+  
+
+    <script>
+        $(document).ready(function () {
+            $('body').on('click',".update",(e)=> {
+                const id = e.target.id;
+                const action = '/update/'+id;
+                const date = $(`.${id}`)[0].innerText;
+                const task = $(`.${id}`)[1].innerText;
+
+                $('#form').attr('action', action);
+                $('#todo').val(task);
+                $('#date').val(date);
+                $('#addEdit').text("Update");
+            })
+        })
+    </script>
+   
+    
+</body>
+</html>
